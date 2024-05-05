@@ -1,39 +1,40 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import * as React from 'react';
+import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import Eventos from './components/Eventos'
-import Footer from './components/Footer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons'; 
 
-const Stack = createStackNavigator();
+import NewEventScreen from './screens/NewEvent';
+import EventListScreen from './screens/EventList';
 
-const App = () => {
+const Tab = createBottomTabNavigator();
+
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="RhythmMad"
-          component={Eventos}
-          options={{ 
-            title: 'RhythmMad',
-            headerStyle: {
-              backgroundColor: '#000080',
-            },
-            headerTintColor: '#FFFFFF',
+<Tab.Navigator screenOptions={{
+        headerStyle: {
+          backgroundColor: '#0F1A57',
+        },
+        headerTintColor: '#fff', 
+        headerTitleStyle: {
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                },
+        }} >
+        <Tab.Screen  name="EventList"  component={EventListScreen} 
+          options={{ title: "Eventos",tabBarIcon: ({ color, size }) => (
+              <Ionicons name="musical-notes-outline" size={size} color= '#0F1A57' />
+            ),
           }}
         />
-      </Stack.Navigator>
-      <Footer />
+        <Tab.Screen  name="NewEvent"  component={NewEventScreen} 
+          options={{ title: "Añadir",tabBarIcon: ({ color, size }) => (
+              <Ionicons name="add-circle" size={size} color= '#0F1A57' />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   );
-};
-
-export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+}

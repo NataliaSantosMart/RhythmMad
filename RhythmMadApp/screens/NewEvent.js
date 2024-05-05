@@ -2,24 +2,10 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Platform, TouchableOpacity, Text, ScrollView } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Ionicons } from '@expo/vector-icons'; 
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
-import { initializeApp } from "firebase/app";
 
+import firebase from '../database/firebase'
 
 export default function NewEvent({ route, navigation }) {
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBdGZ6YnpynGRpFqwJcUNEG_qq2edwKOOA",
-    authDomain: "rhythmmad-67fff.firebaseapp.com",
-    projectId: "rhythmmad-67fff",
-    storageBucket: "rhythmmad-67fff.appspot.com",
-    messagingSenderId: "1084792462717",
-    appId: "1:1084792462717:web:80bbf0df653078d61ec014"
-  };
-// Inicializar Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = app.firestore();
 
 const[state, setState] = useState({
     name:'', 
@@ -55,12 +41,13 @@ const[state, setState] = useState({
     state.time = time; 
   };
 
+  //Guardar un nuevo "Evento" en la base de datos de Firebase
   const saveNewEvent = async () =>{
     if (!state.name || !state.price || !state.ubication || !state.description 
       || !state.urlImage || !state.time || !state.date) {
       alert('Complete todos los campos.'); 
     } else {
-      await db.collection('events').add({
+      await firebase.db.collection('events').add({
         name: state.name, 
         price: state.price, 
         ubication: state.ubication,

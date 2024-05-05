@@ -8,7 +8,7 @@ const eventosData = [
 
 const url ="http://172.25.80.1:3000/eventos"
 
-const Eventos = () => {
+const EventList = () => {
   [dataServer, setDataServer]= useState([])
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const Eventos = () => {
   );
 };
 
-export default Eventos;
+export default EventList;
 
 const styles = StyleSheet.create({
   container: {

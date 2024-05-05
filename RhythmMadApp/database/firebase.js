@@ -1,6 +1,9 @@
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 
+
+//Configuración de la base de datos en Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyBdGZ6YnpynGRpFqwJcUNEG_qq2edwKOOA",
     authDomain: "rhythmmad-67fff.firebaseapp.com",
@@ -11,8 +14,8 @@ const firebaseConfig = {
   };
 
 // Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = firebase.initializeApp(firebaseConfig);
+const db = app.firestore();
 
-export default db;
+export default { db };
 

@@ -9,7 +9,7 @@ export default function NewEvent({ route, navigation }) {
 
 const[state, setState] = useState({
     name:'', 
-    price: 0, 
+    price: '', 
     ubication: '',
     description: '',
     urlImage: '',
@@ -27,8 +27,8 @@ const[state, setState] = useState({
     setTimePickerVisibility(true);
   };
   const handleDateConfirm = (date) => {
+    setState({...state, date: date}); 
     hideDatePicker();
-    state.date = date; 
   };
   const hideTimePicker = () => {
     setTimePickerVisibility(false);
@@ -37,12 +37,24 @@ const[state, setState] = useState({
     setDatePickerVisibility(false);
   };
   const handleTimeConfirm = (time) => {
+    setState({...state, time: time}); 
     hideTimePicker();
-    state.time = time; 
   };
   const handleChangeText = (name, value) => {
     setState({...state, [name]: value}); 
   }; 
+
+  function clearData(){
+    setState({
+      name:'', 
+      price: '', 
+      ubication: '',
+      description: '',
+      urlImage: '',
+      date: '',
+      time: '',
+    });
+  }
 
   //Guardar un nuevo "Evento" en la base de datos de Firebase
   const saveNewEvent = async () => {
@@ -62,6 +74,7 @@ const[state, setState] = useState({
         time: formattedTime
       })
       alert("Evento creado con éxito!");
+      clearData();
     }
   };
   return (
@@ -69,7 +82,7 @@ const[state, setState] = useState({
     <ScrollView contentContainerStyle={styles.scrollView}>
     <View style={styles.container}>
 
-        <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, { marginTop: 25 }]}>
           <Text style={styles.label}>Nombre:</Text>
           <TextInput style={styles.input} value={state.name} onChangeText={(value) => handleChangeText('name', value)}/>
         </View>
@@ -156,7 +169,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexGrow: 1,
-
   },
   input: {
     height: 40,
@@ -175,7 +187,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'column',
-    width: '80%',
+    width: '85%',
     marginBottom: 10,
   },
   label: {
@@ -216,7 +228,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   currencySymbol: {
-    fontSize: 20, 
+    fontSize: 16, 
     color: 'black',
     marginLeft: 10,
   },

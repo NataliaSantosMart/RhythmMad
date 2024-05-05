@@ -29,7 +29,7 @@ export default function App() {
           }}
         />
         <Tab.Screen  name="NewEvent"  component={NewEventScreen} 
-          options={{ title: "Añadir",tabBarIcon: ({ color, size }) => (
+          options={{ title: "Añadir evento",tabBarIcon: ({ color, size }) => (
               <Ionicons name="add-circle" size={size} color= '#0F1A57' />
             ),
           }}

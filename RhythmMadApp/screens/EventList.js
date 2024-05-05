@@ -1,25 +1,37 @@
-import React, {useEffect, useState} from 'react';
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
 const EventList = () => {
-  [dataServer, setDataServer]= useState([])
-  useEffect(() => {
-    const fetchData = async () => {
+  const [dataServer, setDataServer] = useState([]);
+  const [loading, setLoading] = useState(true); // Estado para controlar la carga de datos
+
+  const fetchData = async () => {
+    try {
+      setLoading(true); // Mostrar spinner de carga
       const eventsCollection = firebase.firestore().collection('events');
       const snapshot = await eventsCollection.get();
       const eventsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setDataServer(eventsData);
-    };
+      setLoading(false); // Ocultar spinner de carga
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false); // Ocultar spinner de carga si se produce un error
+    }
+  };
 
-    fetchData().catch(error => console.error('Error fetching data:', error));
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const renderItem = ({ item }) => (
     <View style={styles.eventoContainer}>
-      <View style={styles.imagenContainer}> 
-        <Image source={item.urlImage} style={styles.imagenEvento} resizeMode="cover" />
+      <View style={styles.imagenContainer}>
+        <Image source={{ uri: item.urlImage }} style={styles.imagenEvento} resizeMode="cover" />
       </View>
       <View style={styles.textoContainer}>
         <Text style={styles.nombreEvento}>{item.name}</Text>
@@ -30,12 +42,18 @@ const EventList = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>EVENTOS</Text>
-      <FlatList style={{ width: '100%' }}
-        data={dataServer}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-      />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#F5758C" />
+        </View>
+      ) : (
+        <FlatList
+          style={{ width: '100%' }}
+          data={dataServer}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -45,16 +63,15 @@ export default EventList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    paddingHorizontal: 20, 
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
     paddingTop: 40,
   },
-  titulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'left',
-    marginBottom: 20,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   eventoContainer: {
     marginBottom: 20,
@@ -64,15 +81,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     backgroundColor: '#DB7093',
-    padding:15,
-    marginBottom:10,
-    borderRadius:10,
-    borderWidth: 1, 
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 10,
+    borderWidth: 1,
     borderColor: '#000000',
-
   },
   imagenContainer: {
-    width: '100%', 
+    width: '100%',
   },
   imagenEvento: {
     width: '100%',

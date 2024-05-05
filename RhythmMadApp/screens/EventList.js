@@ -1,41 +1,36 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
-
-const eventosData = [
-  { id: 1, nombre: 'Evento 1', imagen: require('../assets/evento1.jpg'), fecha:'10 de mayo', ubicacion: 'Lugar 1' },
-  { id: 2, nombre: 'Evento 2', imagen: require('../assets/evento2.jpg'),fecha:'15 de mayo', ubicacion: 'Lugar 2' }
-];
-
-const url ="http://172.25.80.1:3000/eventos"
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 const EventList = () => {
   [dataServer, setDataServer]= useState([])
-
   useEffect(() => {
-    fetch(url)
-      .then((res) => res.json()) 
-      .then((json) => {
-        setDataServer(json);
-      })
-      .catch((error) => console.log(error));
+    const fetchData = async () => {
+      const eventsCollection = firebase.firestore().collection('events');
+      const snapshot = await eventsCollection.get();
+      const eventsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setDataServer(eventsData);
+    };
+
+    fetchData().catch(error => console.error('Error fetching data:', error));
   }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.eventoContainer}>
-      <Text style={styles.fechaEvento}>{item.fecha}</Text>
       <View style={styles.imagenContainer}> 
-        <Image source={item.imagenUrl} style={styles.imagenEvento} resizeMode="cover" />
+        <Image source={item.urlImage} style={styles.imagenEvento} resizeMode="cover" />
       </View>
       <View style={styles.textoContainer}>
-        <Text style={styles.nombreEvento}>{item.nombre}</Text>
-        <Text style={styles.ubicacionEvento}>{item.ubicacion}</Text>
+        <Text style={styles.nombreEvento}>{item.name}</Text>
+        <Text style={styles.ubicacionEvento}>{item.ubication}</Text>
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Eventos</Text>
+      <Text style={styles.titulo}>EVENTOS</Text>
       <FlatList style={{ width: '100%' }}
         data={dataServer}
         renderItem={renderItem}
@@ -66,9 +61,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   fechaEvento: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     backgroundColor: '#DB7093',
+    padding:15,
+    marginBottom:10,
+    borderRadius:10,
+    borderWidth: 1, 
+    borderColor: '#000000',
+
   },
   imagenContainer: {
     width: '100%', 
@@ -82,11 +83,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   nombreEvento: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   ubicacionEvento: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#DB7093',
   },
 });

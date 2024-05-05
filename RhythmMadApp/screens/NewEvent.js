@@ -40,30 +40,30 @@ const[state, setState] = useState({
     hideTimePicker();
     state.time = time; 
   };
-
-  //Guardar un nuevo "Evento" en la base de datos de Firebase
-  const saveNewEvent = async () =>{
-    if (!state.name || !state.price || !state.ubication || !state.description 
-      || !state.urlImage || !state.time || !state.date) {
-      alert('Complete todos los campos.'); 
-    } else {
-      await firebase.db.collection('events').add({
-        name: state.name, 
-        price: state.price, 
-        ubication: state.ubication,
-        description: state.description, 
-        urlImage: state.urlImage, 
-        date: state.date, 
-        time: state.time
-      })
-      alert("Evento creado con éxito!");
-    }
-  };
-
   const handleChangeText = (name, value) => {
     setState({...state, [name]: value}); 
   }; 
 
+  //Guardar un nuevo "Evento" en la base de datos de Firebase
+  const saveNewEvent = async () => {
+    if (!state.name || !state.price || !state.ubication || !state.description || !state.urlImage || !state.date || !state.time) {
+      alert('Complete todos los campos.');
+    } else {
+      const formattedDate = state.date ? state.date.toISOString().split('T')[0] : '';
+      const formattedTime = state.time ? state.time.toISOString().split('T')[1].split('.')[0] : '';
+  
+      await firebase.db.collection('events').add({
+        name: state.name,
+        price: state.price,
+        ubication: state.ubication,
+        description: state.description,
+        urlImage: state.urlImage,
+        date: formattedDate,
+        time: formattedTime
+      })
+      alert("Evento creado con éxito!");
+    }
+  };
   return (
 
     <ScrollView contentContainerStyle={styles.scrollView}>
@@ -82,7 +82,6 @@ const[state, setState] = useState({
           </View>
         </View>
 
-
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Fecha:</Text>
           <View style={styles.inputWithIcon}>
@@ -93,7 +92,6 @@ const[state, setState] = useState({
           </View>
         </View>
         <DateTimePickerModal isVisible={isDatePickerVisible} mode="date" onConfirm={handleDateConfirm} onCancel={hideDatePicker} />
-
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Hora:</Text>

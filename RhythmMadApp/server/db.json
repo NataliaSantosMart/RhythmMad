@@ -1,0 +1,21 @@
+{
+"eventos":[
+    { 
+        "id": 1, 
+        "nombre": "Evento 1", 
+        "imagenUrl": "../assets/evento1.jpg", 
+        "fecha":"10 de mayo", 
+        "ubicacion": "Lugar 1",
+        "precio":40,
+        "descipcion": "Descripcion 1"
+    },
+    { 
+        "id": 2, 
+        "nombre": "Evento 2", 
+        "imagenUrl": "../assets/evento2.jpg",
+        "fecha":"15 de mayo", 
+        "ubicacion": "Lugar 2",
+        "precio":50,
+        "descipcion": "Descripcion 2"
+    }]
+}

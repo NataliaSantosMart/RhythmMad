@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import { useNavigation } from '@react-navigation/native';
 
 const EventList = () => {
   const [dataServer, setDataServer] = useState([]);
   const [loading, setLoading] = useState(true); // Estado para controlar la carga de datos
+  const navigation = useNavigation();
 
   const fetchData = async () => {
     try {
@@ -29,15 +31,17 @@ const EventList = () => {
   );
 
   const renderItem = ({ item }) => (
-    <View style={styles.eventoContainer}>
-      <View style={styles.imagenContainer}>
-        <Image source={{ uri: item.urlImage }} style={styles.imagenEvento} resizeMode="cover" />
+    <TouchableOpacity onPress={()=> navigation.navigate('EventInfo', { event: item })}>
+      <View style={styles.eventoContainer}>
+        <View style={styles.imagenContainer}>
+          <Image source={{ uri: item.urlImage }} style={styles.imagenEvento} resizeMode="cover" />
+        </View>
+        <View style={styles.textoContainer}>
+          <Text style={styles.nombreEvento}>{item.name}</Text>
+          <Text style={styles.ubicacionEvento}>{item.ubication}</Text>
+        </View>
       </View>
-      <View style={styles.textoContainer}>
-        <Text style={styles.nombreEvento}>{item.name}</Text>
-        <Text style={styles.ubicacionEvento}>{item.ubication}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

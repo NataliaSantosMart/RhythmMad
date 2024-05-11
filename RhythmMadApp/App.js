@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import NewEventScreen from './screens/NewEvent';
 import EventListScreen from './screens/EventList';
 import SplashScreen from './screens/Splash';
+import { eventInfo } from './screens/eventInfo';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,6 +45,12 @@ export default function App() {
                 />
                 <Tab.Screen  name="NewEvent"  component={NewEventScreen} 
                   options={{ title: "Añadir evento",tabBarIcon: ({ color, size }) => (
+                      <Ionicons name="add-circle" size={size} color= '#0F1A57' />
+                    ),
+                  }}
+                />
+                <Tab.Screen  name="EventInfo"  component={eventInfo} 
+                  options={{ title: "Ver evento",tabBarIcon: ({ color, size }) => (
                       <Ionicons name="add-circle" size={size} color= '#0F1A57' />
                     ),
                   }}
